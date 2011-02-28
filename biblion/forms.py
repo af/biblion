@@ -1,11 +1,12 @@
 from datetime import datetime
 
 from django import forms
-
-from biblion.creole_parser import parse, BiblionHtmlEmitter
 from biblion.models import Post, Revision
 from biblion.utils import can_tweet
 
+from biblion.settings import USE_CREOLE
+if USE_CREOLE:
+    from biblion.creole_parser import parse, BiblionHtmlEmitter
 
 class AdminPostForm(forms.ModelForm):
     
@@ -71,9 +72,12 @@ class AdminPostForm(forms.ModelForm):
             if Post.objects.filter(pk=post.pk, published=None).count():
                 if self.cleaned_data["publish"]:
                     post.published = datetime.now()
-        
-        post.teaser_html = parse(self.cleaned_data["teaser"], emitter=BiblionHtmlEmitter)
-        post.content_html = parse(self.cleaned_data["content"], emitter=BiblionHtmlEmitter)
+        if USE_CREOLE:
+            post.teaser_html = parse(self.cleaned_data["teaser"], emitter=BiblionHtmlEmitter)
+            post.content_html = parse(self.cleaned_data["content"], emitter=BiblionHtmlEmitter)
+        else:
+            post.teaser_html = self.cleaned_data["teaser"]
+            post.content_html = self.cleaned_data["content"]
         post.updated = datetime.now()
         post.save()
         
