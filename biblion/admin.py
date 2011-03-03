@@ -11,9 +11,10 @@ class ImageInline(admin.TabularInline):
     fields = ["image_path"]
 
 
-class PostAdmin(admin.ModelAdmin):  
-    list_display = ["title", "published_flag", "section"]
+class PostAdmin(admin.ModelAdmin):
+    list_display = ["title", "published_flag", "section", "author", "created", "published",]
     list_filter = ["section"]
+    raw_id_fields = ('author',)
     form = AdminPostForm
     fields = [
         "section",
