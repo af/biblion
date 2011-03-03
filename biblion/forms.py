@@ -22,6 +22,7 @@ class AdminPostForm(forms.ModelForm):
         )
     )
     teaser = forms.CharField(
+        required = False,
         widget = forms.Textarea(
             attrs = {"style": "width: 80%;"},
         ),

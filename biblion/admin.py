@@ -16,21 +16,21 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ["section"]
     raw_id_fields = ('author',)
     form = AdminPostForm
-    fields = [
-        "section",
-        "title",
-        "slug",
-        "author",
-        "teaser",
-        "content",
-        "publish",
-    ]
-    if can_tweet():
-        fields.append("tweet")
     prepopulated_fields = {"slug": ("title",)}
     inlines = [
         ImageInline,
     ]
+    fieldsets = (
+        (None, {
+            "fields": ("section", "title", "slug", "author", "content", "publish",)
+        }),
+        ("Optional", {
+            "classes": ("collapse",),
+            "fields": ("teaser",)
+        }),
+    )
+    if can_tweet():
+        fieldsets[0][1]['fields'].append("tweet")
     
     def published_flag(self, obj):
         return bool(obj.published)

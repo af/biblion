@@ -81,6 +81,15 @@ class Post(models.Model):
             return self.revisions.order_by("-updated")[0]
         except IndexError:
             return None
+
+    def get_teaser(self):
+        """
+        Return the html to use for teasers.
+        
+        Normally this will return self.teaser_html, but if that's
+        empty, uses the content html as a teaser instead.
+        """
+        return self.teaser_html if self.teaser_html else self.content_html
     
     class Meta:
         ordering = ("-published",)
